@@ -4,15 +4,10 @@ workflows:
     max_build_duration: 60
     environment:
       xcode: latest
-      cocoapods: default
     scripts:
-      - name: Install Dependencies
-        script: |
-          brew install cocoapods
-          pod install
       - name: Build iOS App
         script: |
-          xcodebuild -workspace "SkibApp.xcworkspace" \
+          xcodebuild -project "SkibApp.xcodeproj" \
           -scheme "SkibApp" \
           -configuration Release \
           -sdk iphoneos \
