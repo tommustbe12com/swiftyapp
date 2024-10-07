@@ -1,0 +1,33 @@
+workflows:
+  ios-app:
+    name: iOS App Workflow
+    max_build_duration: 60
+    environment:
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install Dependencies
+        script: |
+          brew install cocoapods
+          pod install
+      - name: Build iOS App
+        script: |
+          xcodebuild -workspace "SkibApp.xcworkspace" \
+          -scheme "SkibApp" \
+          -configuration Release \
+          -sdk iphoneos \
+          -archivePath $CM_BUILD_DIR/output/SkibApp.xcarchive archive
+      - name: Export IPA
+        script: |
+          xcodebuild -exportArchive \
+          -archivePath $CM_BUILD_DIR/output/SkibApp.xcarchive \
+          -exportOptionsPlist ExportOptions.plist \
+          -exportPath $CM_BUILD_DIR/output/ipa
+
+    artifacts:
+      - $CM_BUILD_DIR/output/ipa/*.ipa
+
+    publishing:
+      email:
+        recipients:
+          - admin@tommustbe12.com
